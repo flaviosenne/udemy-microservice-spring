@@ -2,13 +2,13 @@ package com.microservice.crud.service;
 
 import com.microservice.crud.data.vo.ProductVO;
 import com.microservice.crud.entity.Product;
+import com.microservice.crud.exception.ResourceNotFoundException;
 import com.microservice.crud.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.lang.module.ResolutionException;
 import java.util.Optional;
 
 @Service
@@ -26,14 +26,14 @@ public class ProductService {
 
     public ProductVO findById(Long id){
         return ProductVO.create(repository.findById(id).orElseThrow(()->
-                new ResolutionException("Produto não encontrado")));
+                new ResourceNotFoundException("Produto não encontrado")));
     }
 
     public ProductVO update(ProductVO productVO){
         final Optional<Product> existProduct = repository.findById(productVO.getId());
 
         if(existProduct.isEmpty()){
-            throw new ResolutionException("Produto não encontrado");
+            throw new ResourceNotFoundException("Produto não encontrado");
         }
 
         return ProductVO.create(repository.save(ProductVO.create(productVO)));
@@ -41,7 +41,7 @@ public class ProductService {
 
     public void delete(Long id){
         Product entity = repository.findById(id).orElseThrow(() ->
-                new ResolutionException("Produto não encontrado"));
+                new ResourceNotFoundException("Produto não encontrado"));
 
         repository.delete(entity);
     }

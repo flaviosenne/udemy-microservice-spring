@@ -1,1 +1,19 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /crud
 
+spring:
+  application:
+    name: crud
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+
+  jmx:
+    enabled: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/crud?useSSL=false&serverTimezone=UTC
+    username: root
+    password: joaoflavio

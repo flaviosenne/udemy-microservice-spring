@@ -51,4 +51,27 @@ public class ProductController {
         return new ResponseEntity<>(pagedModel, HttpStatus.OK);
     }
 
+
+    @PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
+            consumes = {"application/json", "application/xml", "application/x-yaml"})
+    public ProductVO create(@RequestBody ProductVO productVO){
+        ProductVO product = service.create(productVO);
+        product.add(linkTo(methodOn(ProductController.class).findById(product.getId())).withSelfRel());
+        return product;
+    }
+
+    @PutMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
+            consumes = {"application/json", "application/xml", "application/x-yaml"})
+    public ProductVO update(@RequestBody ProductVO productVO){
+        ProductVO product = service.update(productVO);
+        product.add(linkTo(methodOn(ProductController.class).findById(product.getId())).withSelfRel());
+        return product;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+        service.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
