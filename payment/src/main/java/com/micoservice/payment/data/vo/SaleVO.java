@@ -30,7 +30,7 @@ public class SaleVO extends RepresentationModel<SaleVO> implements Serializable 
     private Date date;
 
     @JsonProperty("products")
-    private List<ProductSale> products;
+    private List<ProductSaleVO> products;
 
     @JsonProperty("totalValue")
     private Double totalValue;
