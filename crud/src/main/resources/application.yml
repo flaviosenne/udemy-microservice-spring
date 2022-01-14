@@ -11,6 +11,9 @@ spring:
     hibernate:
       ddl-auto: update
 
+  rabbitmq:
+    addresses: amqps://picxtlgp:70EnkLONoqVU_6EXM2XOdzaXBcISPAk5@chimpanzee.rmq.cloudamqp.com/picxtlgp
+
   jmx:
     enabled: false
   datasource:
@@ -22,3 +25,4 @@ crud:
   rabbitmq:
     exchange: crud.exchange
     routingkey: crud.product.routingkey
+

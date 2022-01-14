@@ -3,6 +3,7 @@ package com.microservice.crud.service;
 import com.microservice.crud.data.vo.ProductVO;
 import com.microservice.crud.entity.Product;
 import com.microservice.crud.exception.ResourceNotFoundException;
+import com.microservice.crud.message.ProductSendMessage;
 import com.microservice.crud.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository repository;
+    private final ProductSendMessage productSendMessage;
 
     public ProductVO create(ProductVO productVO){
-        return ProductVO.create(repository.save(ProductVO.create(productVO)));
+        ProductVO product = ProductVO.create(repository.save(ProductVO.create(productVO)));
+        this.productSendMessage.sendMessage(product);
+        return product;
     }
 
     public Page<ProductVO> findAll(Pageable pageable){
