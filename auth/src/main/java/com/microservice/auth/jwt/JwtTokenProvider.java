@@ -1,9 +1,7 @@
 package com.microservice.auth.jwt;
 
 import com.microservice.auth.entity.Permission;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,5 +71,14 @@ public class JwtTokenProvider {
         return bearerToken != null && bearerToken.startsWith("Bearer ") ?
                 bearerToken.substring(7, bearerToken.length()):
                 null;
+    }
+
+    public boolean validateToken(String token){
+        try{
+            Jws<Claims> claims = Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token);
+            return claims.getBody().getExpiration().before(new Date());
+        }catch (JwtException | IllegalArgumentException e){
+            return false;
+        }
     }
 }
