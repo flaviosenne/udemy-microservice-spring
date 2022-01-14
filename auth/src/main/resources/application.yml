@@ -1,0 +1,27 @@
+
+server:
+  port: 8084
+  servlet:
+    context-path: /auth
+
+spring:
+  application:
+    name: auth
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+
+
+  jmx:
+    enabled: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth?useSSL=false&serverTimezone=UTC
+    username: root
+    password: joaoflavio
+
+security:
+  jwt:
+    token:
+      secret-key: key_microservices
+      expire-length: 360000
