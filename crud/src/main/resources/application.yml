@@ -26,3 +26,9 @@ crud:
     exchange: crud.exchange
     routingkey: crud.product.routingkey
 
+
+security:
+  jwt:
+    token:
+      secret-key: key_microservices
+

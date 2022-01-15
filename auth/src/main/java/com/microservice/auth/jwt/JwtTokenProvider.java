@@ -1,6 +1,5 @@
 package com.microservice.auth.jwt;
 
-import com.microservice.auth.entity.Permission;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +24,7 @@ public class JwtTokenProvider {
     private String secretKey;
 
     @Value("${security.jwt.token.expire-length}")
-    private Long expireIn;
+    private String expireIn;
 
     @Autowired
     @Qualifier("userService")
@@ -36,16 +35,16 @@ public class JwtTokenProvider {
         this.secretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(String userName, List<Permission> roles){
+    public String createToken(String userName, List<String> roles){
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put("roles", roles);
 
-        Date now = new Date();
-        Date validate = new Date(now.getTime() + expireIn);
+        Date today = new Date();
+        Date validate = new Date(today.getTime() + Long.parseLong(this.expireIn));
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now)
+                .setIssuedAt(today)
                 .setExpiration(validate)
                 .signWith(SignatureAlgorithm.HS512, this.secretKey)
                 .compact();
@@ -60,7 +59,7 @@ public class JwtTokenProvider {
     private String getUserName(String token){
         return Jwts.parser()
                 .setSigningKey(this.secretKey)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
@@ -75,8 +74,8 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token){
         try{
-            Jws<Claims> claims = Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token);
-            return claims.getBody().getExpiration().before(new Date());
+            Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token);
+            return true;
         }catch (JwtException | IllegalArgumentException e){
             return false;
         }

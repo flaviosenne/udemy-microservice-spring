@@ -5,20 +5,18 @@ import com.microservice.auth.jwt.JwtTokenProvider;
 import com.microservice.auth.repository.UserRepository;
 import com.microservice.auth.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")
@@ -29,7 +27,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    @RequestMapping("/testSecurity")
+    @GetMapping(value = "/test")
     public String test(){
         return "testado";
     }
@@ -47,7 +45,8 @@ public class AuthController {
             User user = userRepository.findByUserName(userName)
                     .orElseThrow(()-> new UsernameNotFoundException("Usuário não encontrado"));
 
-            String token = this.jwtTokenProvider.createToken(userName, user.getPermissions());
+
+            String token = this.jwtTokenProvider.createToken(userName, user.getRoles());
 
             Map<Object, Object> model = new HashMap<>();
             model.put("username", userName);

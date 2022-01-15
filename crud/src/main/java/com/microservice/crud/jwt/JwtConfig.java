@@ -1,4 +1,4 @@
-package com.microservice.auth.jwt;
+package com.microservice.crud.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
