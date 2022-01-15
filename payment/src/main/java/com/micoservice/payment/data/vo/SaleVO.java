@@ -2,15 +2,14 @@ package com.micoservice.payment.data.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.micoservice.payment.entity.ProductSale;
 import com.micoservice.payment.entity.Sale;
 import lombok.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonPropertyOrder({"id","date","totalValue","products"})
 @Getter
@@ -18,6 +17,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode(callSuper = false)
 public class SaleVO extends RepresentationModel<SaleVO> implements Serializable {
 
@@ -36,10 +36,24 @@ public class SaleVO extends RepresentationModel<SaleVO> implements Serializable 
     private Double totalValue;
 
     public static SaleVO create(Sale sale){
-        return new ModelMapper().map(sale, SaleVO.class);
+        return SaleVO.builder()
+                .id(sale.getId())
+                .date(sale.getDate())
+                .totalValue(sale.getTotalValue())
+                .products(sale.getProducts().stream()
+                        .map(ProductSaleVO::create)
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public static Sale create(SaleVO sale){
-        return new ModelMapper().map(sale, Sale.class);
+        return Sale.builder()
+                .id(sale.getId())
+                .date(sale.getDate())
+                .totalValue(sale.getTotalValue())
+                .products(sale.getProducts().stream()
+                        .map(ProductSaleVO::create)
+                        .collect(Collectors.toList()))
+                .build();
     }
 }
