@@ -25,3 +25,10 @@ security:
     token:
       secret-key: key_microservices
       expire-length: 360000
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/registry/eureka
